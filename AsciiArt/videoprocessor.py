@@ -5,6 +5,8 @@
 import cv2
 from tqdm import tqdm
 
+from AsciiArt.imageprocessor import ImageProcessor
+
 
 class VideoProcessor:
 
@@ -17,16 +19,19 @@ class VideoProcessor:
         self.fps = video.get(cv2.CAP_PROP_FPS)
         self.length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
-    def convertToAscii(self, output="out.mp4", quality=0.1, start=0, end=0, show=False, asciiscale=""):
+    def videoToAscii(self, output="out.mp4", quality=0.1, start=0, end=0, show=False, asciiscale=""):
         self.setparams(output, asciiscale, start)
 
         print("Converting video please wait...")
+
+        improcessor = ImageProcessor()
+
         for frame_number in tqdm(range(start, end)):
             exists, frame = self.video.read()
             if exists:
                 # Image to Ascii returns np array
                 frame = self.format(frame)
-                outframe = imageToAscii(frame, quality, self.scale)
+                outframe = improcessor.imageToAscii(frame, quality, self.scale)
                 self.result.write(outframe)
 
                 # Shows rendering
